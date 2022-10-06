@@ -704,11 +704,10 @@ func (ui *ui) loadFile(app *app, volatile bool) {
 		return
 	}
 
-	if curr.path == ui.currentFile {
-		return
+	if curr.path != ui.currentFile {
+		ui.currentFile = curr.path
+		onSelect(app)
 	}
-	ui.currentFile = curr.path
-	onSelect(app)
 
 	if !gOpts.preview {
 		return
@@ -1084,8 +1083,12 @@ func (ui *ui) pollEvent() tcell.Event {
 				ch = ' '
 			case reAltKey.MatchString(val):
 				match := reAltKey.FindStringSubmatch(val)[1]
-				ch, _ = utf8.DecodeRuneInString(match)
 				mod = tcell.ModMask(tcell.ModAlt)
+				if key, ok := gValKey[fmt.Sprintf("<%s>", match)]; ok {
+					k = key
+				} else {
+					ch, _ = utf8.DecodeRuneInString(match)
+				}
 			default:
 				if key, ok := gValKey[val]; ok {
 					k = key
@@ -1100,6 +1103,14 @@ func (ui *ui) pollEvent() tcell.Event {
 	case ev := <-ui.tevChan:
 		return ev
 	}
+}
+
+func getNonRuneKeyValue(tev *tcell.EventKey) string {
+	val := gKeyVal[tev.Key()]
+	if tev.Modifiers()&tcell.ModAlt != 0 && val[0] == '<' {
+		val = "<a-" + val[1:]
+	}
+	return val
 }
 
 // This function is used to read a normal event on the client side. For keys,
@@ -1128,13 +1139,14 @@ func (ui *ui) readNormalEvent(ev tcell.Event, nav *nav) expr {
 				ui.keyAcc = append(ui.keyAcc, tev.Rune())
 			}
 		} else {
-			val := gKeyVal[tev.Key()]
+			val := getNonRuneKeyValue(tev)
 			if val == "<esc>" && string(ui.keyAcc) != "" {
 				ui.keyAcc = nil
 				ui.keyCount = nil
 				ui.menuBuf = nil
 				return draw
 			}
+
 			ui.keyAcc = append(ui.keyAcc, []rune(val)...)
 		}
 
@@ -1184,7 +1196,6 @@ func (ui *ui) readNormalEvent(ev tcell.Event, nav *nav) expr {
 		}
 
 		var button string
-
 		switch tev.Buttons() {
 		case tcell.Button1:
 			button = "<m-1>"
@@ -1213,12 +1224,31 @@ func (ui *ui) readNormalEvent(ev tcell.Event, nav *nav) expr {
 		case tcell.ButtonNone:
 			return nil
 		}
+
+		var mod string
+		switch tev.Modifiers() {
+		case tcell.ModCtrl:
+			mod = "c"
+		case tcell.ModAlt:
+			mod = "a"
+		case tcell.ModShift:
+			mod = "s"
+		default:
+			mod = ""
+		}
+		if mod != "" {
+			button = fmt.Sprintf("<%s-%s", mod, button[1:])
+		}
+
 		if expr, ok := gOpts.keys[button]; ok {
 			return expr
 		}
-
-		if tev.Buttons() != tcell.Button1 && tev.Buttons() != tcell.Button2 {
-			return nil
+		if button != "<m-1>" && button != "<m-2>" {
+			ui.echoerrf("unknown mapping: %s", button)
+			ui.keyAcc = nil
+			ui.keyCount = nil
+			ui.menuBuf = nil
+			return draw
 		}
 
 		x, y := tev.Position()
@@ -1289,7 +1319,7 @@ func readCmdEvent(ev tcell.Event) expr {
 				return &callExpr{"cmd-insert", []string{string(tev.Rune())}, 1}
 			}
 		} else {
-			val := gKeyVal[tev.Key()]
+			val := getNonRuneKeyValue(tev)
 			if expr, ok := gOpts.cmdkeys[val]; ok {
 				return expr
 			}

@@ -145,6 +145,7 @@ func init() {
 	gOpts.keys["<c-b>"] = &callExpr{"page-up", nil, 1}
 	gOpts.keys["<pgup>"] = &callExpr{"page-up", nil, 1}
 	gOpts.keys["<c-y>"] = &callExpr{"scroll-up", nil, 1}
+	gOpts.keys["<c-m-up>"] = &callExpr{"scroll-up", nil, 1}
 	gOpts.keys["j"] = &callExpr{"down", nil, 1}
 	gOpts.keys["<down>"] = &callExpr{"down", nil, 1}
 	gOpts.keys["<m-down>"] = &callExpr{"down", nil, 1}
@@ -152,6 +153,7 @@ func init() {
 	gOpts.keys["<c-f>"] = &callExpr{"page-down", nil, 1}
 	gOpts.keys["<pgdn>"] = &callExpr{"page-down", nil, 1}
 	gOpts.keys["<c-e>"] = &callExpr{"scroll-down", nil, 1}
+	gOpts.keys["<c-m-down>"] = &callExpr{"scroll-down", nil, 1}
 	gOpts.keys["h"] = &callExpr{"updir", nil, 1}
 	gOpts.keys["<left>"] = &callExpr{"updir", nil, 1}
 	gOpts.keys["l"] = &callExpr{"open", nil, 1}
@@ -169,6 +171,7 @@ func init() {
 	gOpts.keys["<space>"] = &listExpr{[]expr{&callExpr{"toggle", nil, 1}, &callExpr{"down", nil, 1}}, 1}
 	gOpts.keys["t"] = &callExpr{"tag-toggle", nil, 1}
 	gOpts.keys["v"] = &callExpr{"invert", nil, 1}
+	gOpts.keys["V"] = &callExpr{"invert-below", nil, 1}
 	gOpts.keys["u"] = &callExpr{"unselect", nil, 1}
 	gOpts.keys["y"] = &callExpr{"copy", nil, 1}
 	gOpts.keys["d"] = &callExpr{"cut", nil, 1}

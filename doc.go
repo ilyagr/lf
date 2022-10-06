@@ -11,12 +11,14 @@ You can also use 'doc' command (default '<f-1>') inside lf to view the documenta
 A man page with the same content is also available in the repository at https://github.com/gokcehan/lf/blob/master/lf.1
 
 You can run 'lf -help' to see descriptions of command line options.
+The 'keys' command inside lf lists available key bindings.
 
 # Quick Reference
 
 The following commands are provided by lf:
 
 	quit                     (default 'q')
+	keys
 	up                       (default 'k' and '<up>')
 	half-up                  (default '<c-u>')
 	page-up                  (default '<c-b>' and '<pgup>')
@@ -36,6 +38,7 @@ The following commands are provided by lf:
 	low                      (default 'L')
 	toggle
 	invert                   (default 'v')
+	invert-below             (default 'V')
 	unselect                 (default 'u')
 	glob-select
 	glob-unselect
@@ -219,6 +222,7 @@ The following additional keybindings are provided by default:
 	map se :set sortby ext; set info
 	map gh cd ~
 	map <space> :toggle; down
+	map <f-1> :doc
 
 If the 'mouse' option is enabled, mouse buttons have the following default effects:
 
@@ -229,7 +233,7 @@ If the 'mouse' option is enabled, mouse buttons have the following default effec
 	    Enter a directory or open a file. Also works on the preview window.
 
 	Scroll wheel
-	    Scroll up or down.
+	    Move up or down. If Ctrl is pressed, scroll up or down.
 
 # Configuration
 
@@ -290,6 +294,10 @@ Modal commands do not take any arguments, but instead change the operation mode 
 
 Quit lf and return to the shell.
 
+	keys
+
+List active key bindings in the pager.
+
 	up                       (default 'k' and '<up>')
 	half-up                  (default '<c-u>')
 	page-up                  (default '<c-b>' and '<pgup>')
@@ -336,6 +344,13 @@ Toggle the selection of the current file or files given as arguments.
 Reverse the selection of all files in the current directory (i.e. 'toggle' all files).
 Selections in other directories are not effected by this command.
 You can define a new command to select all files in the directory by combining 'invert' with 'unselect' (i.e. 'cmd select-all :unselect; invert'), though this will also remove selections in other directories.
+
+	invert-below             (default 'V')
+
+Reverse the selection (i.e. 'toggle') of all files at or after the current file in the current directory.
+To select a contiguous block of files, use this command on the first file you want to select.
+Then, move down to the first file you do *not* want to select (the one after the end of the desired selection) and use this command again.
+This achieves an effect similar to the visual mode in vim.
 
 	unselect                 (default 'u')
 
