@@ -1980,6 +1980,8 @@ func (e *callExpr) eval(app *app, args []string) {
 		app.ui.echomsg(strings.Join(e.args, " "))
 	case "echoerr":
 		app.ui.echoerr(strings.Join(e.args, " "))
+	case "keys":
+		app.ui.echoerr("This command is now called :maps")
 	case "cd":
 		path := "~"
 		if len(e.args) > 0 {

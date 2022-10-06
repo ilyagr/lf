@@ -1,3 +1,58 @@
+## README for this fork of `lf`
+
+This is an unsupported and unofficial fork. The official repository for the `lf`
+file manager is at https://github.com/gokcehan/lf This fork is intended to be a
+preview of upcoming `lf` features. It also includes a few additional minor
+features that I like but may not be added to the official versions.
+
+Currently, it is very similar to the official version of `lf`. The main
+difference are some half-baked minor features related to supporting a few
+additional Alt+key bindings.
+
+This fork is meant to contain my open pull requests from
+https://github.com/gokcehan/lf/pull/ (if any).
+
+### Fork installation
+
+Occasionally, I make binaries available at
+https://github.com/ilyagr/lf/releases/. My plan is that release `r28-ig2` in my
+repo would be the second release I make that is based on the `r28` official `lf`
+release. It may or may not include a description of which features it includes.
+Most of its features will hopefully be a preview of the `r29` official version
+of `lf`.
+
+Alternatively, compiling Go programs is spectacularly fast and easy. The steps
+would be:
+
+1. Install Go. I use `sudo apt install golang-1.19` on Debian. This may require
+   and use the [Debian backports](https://backports.debian.org/Instructions/)
+   repository. Alternatively, see http://go.dev for official instructions.
+2. Clone this repo: `git clone https://github.com/ilyagr/lf && cd lf`.
+3. Run `CGO_ENABLED=0 go build`. If all is well, it will seem like nothing
+   happened. An `lf` binary will appear in the same directory.
+
+   Alternatively, the [lengthier command
+   below](https://github.com/ilyagr/lf#installation) will result in a smaller
+   binary.
+
+4. Copy the resulting `lf` binary to somewhere in your PATH.
+
+### Fork details and warnings
+
+The `ilya` branch should be a merge of several feature branches.
+Each commit should describe what it does.
+This is a little difficult to see in gihub's view of repo history.
+You may need to clone the repo and use another tool (`git log`, `gitk`, `tig`).
+
+WARNING: I force-push the `ilya` branch regularly and without warning, whenever I update any of the branches or rebase them on top of a new upstream commit.
+This is because I use [`jj`](https://github.com/martinvonz/jj) to manage this repo.
+There's no way to find out where the `ilya` branch was previously other than the taggged releases.
+You can see a diff between a tag and the present `ilya` branch via an URL like https://github.com/ilyagr/lf/compare/ilya..r28-ig1.
+
+Original README follows.
+
+---------------------------------------------------
+
 # LF
 
 [Google Groups](https://groups.google.com/forum/#!forum/lf-fm)
