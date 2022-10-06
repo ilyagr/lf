@@ -1,3 +1,43 @@
+## README for this fork of `lf`
+
+This is an unsupported and unofficial fork.
+The official repository for the `lf` file manager is at https://github.com/gokcehan/lf
+This fork is intended to be a preview of upcoming `lf` features.
+It also includes a few additional minor features that I like but may not be added to the official versions.
+
+Currently, it adds the following to the official version of `lf`:
+
+- The [`:keys` command](https://github.com/gokcehan/lf/pull/918)
+- All of my open pull requests from https://github.com/gokcehan/lf/pull/
+- Possibly additinal half-baked minor features that may lack sufficient documentation.
+
+### Fork installation
+
+Compiling Go programs is spectacularly fast and easy.
+So, you should install this from source:
+
+1. Install Go. I use `sudo apt install golang-1.19` on Debian. See http://go.dev for official instructions.
+2. Clone this repo: `git clone https://github.com/ilyagr/lf && cd lf`.
+3. Run `CGO_ENABLED=0 go build`. If all is well, it will seem like nothing happened. An `lf` binary will appear in the same directory.
+
+   Alternatively, the [lengthier command below](https://github.com/ilyagr/lf#installation) will result in a smaller binary.
+
+4. Copy the resulting `lf` binary to somewhere in your PATH.
+
+### Fork details and warnings
+
+The `ilya` branch should be a merge of several feature branches.
+Each commit should describe what it does.
+This is a little difficult to see in gihub's view of repo history.
+
+WARNING: I force-push the `ilya` branch regularly and without warning, whenever I update any of the branches or rebase them on top of a new upstream commit.
+This is because I use [`jj`](https://github.com/martinvonz/jj) to manage this repo.
+There's no way to find out where the `ilya` branch was previously, unless you keep track of it yourself.
+
+Original README follows.
+
+---------------------------------------------------
+
 # LF
 
 [Google Groups](https://groups.google.com/forum/#!forum/lf-fm)

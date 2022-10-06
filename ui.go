@@ -330,10 +330,18 @@ type dirContext struct {
 	tags       map[string]string
 }
 
+type dirRole int
+
+const (
+	Active dirRole = iota
+	Parent
+	Preview
+)
+
 type dirStyle struct {
-	colors     styleMap
-	icons      iconMap
-	previewing bool
+	colors styleMap
+	icons  iconMap
+	role   dirRole
 }
 
 // These colors are not currently customizeable
@@ -341,7 +349,6 @@ const LineNumberColor = tcell.ColorOlive
 const SelectionColor = tcell.ColorPurple
 const YankColor = tcell.ColorOlive
 const CutColor = tcell.ColorMaroon
-const DimCursorColor = tcell.ColorGrey
 
 func (win *win) printDir(screen tcell.Screen, dir *dir, context *dirContext, dirStyle *dirStyle) {
 	if win.w < 5 || dir == nil {
@@ -349,20 +356,17 @@ func (win *win) printDir(screen tcell.Screen, dir *dir, context *dirContext, dir
 	}
 
 	messageStyle := tcell.StyleDefault.Reverse(true)
-	if dirStyle.previewing {
-		messageStyle = messageStyle.Foreground(DimCursorColor)
-	}
 
 	if dir.noPerm {
 		win.print(screen, 2, 0, messageStyle, "permission denied")
 		return
 	}
-	if (dir.loading && len(dir.files) == 0) || (dirStyle.previewing && dir.loading && gOpts.dirpreviews) {
+	if (dir.loading && len(dir.files) == 0) || (dirStyle.role == Preview && dir.loading && gOpts.dirpreviews) {
 		win.print(screen, 2, 0, messageStyle, "loading...")
 		return
 	}
 
-	if dirStyle.previewing && gOpts.dirpreviews && len(gOpts.previewer) > 0 {
+	if dirStyle.role == Preview && gOpts.dirpreviews && len(gOpts.previewer) > 0 {
 		// Print previewer result instead of default directory print operation.
 		st := tcell.StyleDefault
 		for i, l := range dir.lines {
@@ -436,13 +440,6 @@ func (win *win) printDir(screen tcell.Screen, dir *dir, context *dirContext, dir
 			}
 		}
 
-		if i == dir.pos {
-			st = st.Reverse(true)
-			if dirStyle.previewing {
-				st = st.Foreground(DimCursorColor)
-			}
-		}
-
 		var s []rune
 
 		s = append(s, ' ')
@@ -484,16 +481,29 @@ func (win *win) printDir(screen tcell.Screen, dir *dir, context *dirContext, dir
 			}
 		}
 
-		s = append(s, ' ')
+		ce := ""
+		if i == dir.pos {
+			switch dirStyle.role {
+			case Active:
+				ce = gOpts.cursorfmt
+			case Parent:
+				ce = gOpts.cursorparentfmt
+			case Preview:
+				ce = gOpts.cursorpreviewfmt
+			}
+		}
+		cursorescapefmt := optionToFmtstr(ce)
 
-		win.print(screen, lnwidth+1, i, st, string(s))
+		s = append(s, ' ')
+		styledFilename := fmt.Sprintf(cursorescapefmt, string(s))
+		win.print(screen, lnwidth+1, i, st, styledFilename)
 
 		tag, ok := context.tags[path]
 		if ok {
 			if i == dir.pos {
-				win.print(screen, lnwidth+1, i, st, tag)
+				win.print(screen, lnwidth+1, i, st, fmt.Sprintf(cursorescapefmt, tag))
 			} else {
-				win.print(screen, lnwidth+1, i, tcell.StyleDefault, fmt.Sprintf(gOpts.tagfmt, tag))
+				win.print(screen, lnwidth+1, i, tcell.StyleDefault, fmt.Sprintf(optionToFmtstr(gOpts.tagfmt), tag))
 			}
 		}
 	}
@@ -659,8 +669,16 @@ func (ui *ui) echomsg(msg string) {
 	log.Print(msg)
 }
 
+func optionToFmtstr(optstr string) string {
+	if !strings.Contains(optstr, "%s") {
+		return optstr + "%s\033[0m"
+	} else {
+		return optstr
+	}
+}
+
 func (ui *ui) echoerr(msg string) {
-	ui.msg = fmt.Sprintf(gOpts.errorfmt, msg)
+	ui.msg = fmt.Sprintf(optionToFmtstr(gOpts.errorfmt), msg)
 	log.Printf("error: %s", msg)
 }
 
@@ -914,9 +932,15 @@ func (ui *ui) draw(nav *nav) {
 		wins--
 	}
 	for i := 0; i < wins; i++ {
+		var role dirRole
+		if i < wins-1 {
+			role = Parent
+		} else {
+			role = Active
+		}
 		if dir := ui.dirOfWin(nav, i); dir != nil {
 			ui.wins[i].printDir(ui.screen, dir, &context,
-				&dirStyle{colors: ui.styles, icons: ui.icons, previewing: false})
+				&dirStyle{colors: ui.styles, icons: ui.icons, role: role})
 		}
 	}
 
@@ -952,7 +976,7 @@ func (ui *ui) draw(nav *nav) {
 
 			if curr.IsDir() {
 				preview.printDir(ui.screen, ui.dirPrev, &context,
-					&dirStyle{colors: ui.styles, icons: ui.icons, previewing: true})
+					&dirStyle{colors: ui.styles, icons: ui.icons, role: Preview})
 			} else if curr.Mode().IsRegular() {
 				preview.printReg(ui.screen, ui.regPrev)
 			}

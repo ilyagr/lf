@@ -11,12 +11,14 @@ You can also use 'doc' command (default '<f-1>') inside lf to view the documenta
 A man page with the same content is also available in the repository at https://github.com/gokcehan/lf/blob/master/lf.1
 
 You can run 'lf -help' to see descriptions of command line options.
+The 'keys' command inside lf lists available key bindings.
 
 # Quick Reference
 
 The following commands are provided by lf:
 
 	quit                     (default 'q')
+	keys
 	up                       (default 'k' and '<up>')
 	half-up                  (default '<c-u>')
 	page-up                  (default '<c-b>' and '<pgup>')
@@ -111,57 +113,60 @@ The following command line commands are provided by lf:
 
 The following options can be used to customize the behavior of lf:
 
-	anchorfind     bool      (default on)
-	autoquit       bool      (default off)
-	cleaner        string    (default '')
-	dircache       bool      (default on)
-	dircounts      bool      (default off)
-	dirfirst       bool      (default on)
-	dironly        bool      (default off)
-	dirpreviews    bool      (default off)
-	drawbox        bool      (default off)
-	errorfmt       string    (default "\033[7;31;47m%s\033[0m")
-	filesep        string    (default "\n")
-	findlen        int       (default 1)
-	globsearch     bool      (default off)
-	hidden         bool      (default off)
-	hiddenfiles    []string  (default '.*')
-	history        bool      (default on)
-	icons          bool      (default off)
-	ifs            string    (default '')
-	ignorecase     bool      (default on)
-	ignoredia      bool      (default on)
-	incfilter      bool      (default off)
-	incsearch      bool      (default off)
-	info           []string  (default '')
-	infotimefmtnew string    (default 'Jan _2 15:04')
-	infotimefmtold string    (default 'Jan _2  2006')
-	mouse          bool      (default off)
-	number         bool      (default off)
-	period         int       (default 0)
-	preview        bool      (default on)
-	previewer      string    (default '')
-	promptfmt      string    (default "\033[32;1m%u@%h\033[0m:\033[34;1m%d\033[0m\033[1m%f\033[0m")
-	ratios         []int     (default '1:2:3')
-	relativenumber bool      (default off)
-	reverse        bool      (default off)
-	scrolloff      int       (default 0)
-	selmode        string    (default 'all')
-	shell          string    (default 'sh' for Unix and 'cmd' for Windows)
-	shellflag      string    (default '-c' for Unix and '/c' for Windows)
-	shellopts      []string  (default '')
-	smartcase      bool      (default on)
-	smartdia       bool      (default off)
-	sortby         string    (default 'natural')
-	tabstop        int       (default 8)
-	tagfmt         string    (default "\033[31m%s\033[0m")
-	tempmarks      string    (default '')
-	timefmt        string    (default 'Mon Jan _2 15:04:05 2006')
-	truncatechar   string    (default '~')
-	waitmsg        string    (default 'Press any key to continue')
-	wrapscan       bool      (default on)
-	wrapscroll     bool      (default off)
-	user_{option}  string    (default none)
+	anchorfind       bool      (default on)
+	autoquit         bool      (default off)
+	cleaner          string    (default '')
+	cursorfmt        string    (default "\033[7m")
+	cursorparentfmt  string    (default TODO, update rest of docs TODO)
+	cursorpreviewfmt string    (default "\033[4m")
+	dircache         bool      (default on)
+	dircounts        bool      (default off)
+	dirfirst         bool      (default on)
+	dironly          bool      (default off)
+	dirpreviews      bool      (default off)
+	drawbox          bool      (default off)
+	errorfmt         string    (default "\033[7;31;47m")
+	filesep          string    (default "\n")
+	findlen          int       (default 1)
+	globsearch       bool      (default off)
+	hidden           bool      (default off)
+	hiddenfiles      []string  (default '.*')
+	history          bool      (default on)
+	icons            bool      (default off)
+	ifs              string    (default '')
+	ignorecase       bool      (default on)
+	ignoredia        bool      (default on)
+	incfilter        bool      (default off)
+	incsearch        bool      (default off)
+	info             []string  (default '')
+	infotimefmtnew   string    (default 'Jan _2 15:04')
+	infotimefmtold   string    (default 'Jan _2  2006')
+	mouse            bool      (default off)
+	number           bool      (default off)
+	period           int       (default 0)
+	preview          bool      (default on)
+	previewer        string    (default '')
+	promptfmt        string    (default "\033[32;1m%u@%h\033[0m:\033[34;1m%d\033[0m\033[1m%f\033[0m")
+	ratios           []int     (default '1:2:3')
+	relativenumber   bool      (default off)
+	reverse          bool      (default off)
+	scrolloff        int       (default 0)
+	selmode          string    (default 'all')
+	shell            string    (default 'sh' for Unix and 'cmd' for Windows)
+	shellflag        string    (default '-c' for Unix and '/c' for Windows)
+	shellopts        []string  (default '')
+	smartcase        bool      (default on)
+	smartdia         bool      (default off)
+	sortby           string    (default 'natural')
+	tabstop          int       (default 8)
+	tagfmt           string    (default "\033[31m")
+	tempmarks        string    (default '')
+	timefmt          string    (default 'Mon Jan _2 15:04:05 2006')
+	truncatechar     string    (default '~')
+	waitmsg          string    (default 'Press any key to continue')
+	wrapscan         bool      (default on)
+	wrapscroll       bool      (default off)
+	user_{option}    string    (default none)
 
 The following environment variables are exported for shell commands:
 
@@ -216,6 +221,7 @@ The following additional keybindings are provided by default:
 	map se :set sortby ext; set info
 	map gh cd ~
 	map <space> :toggle; down
+	map <f-1> :doc
 
 If the 'mouse' option is enabled, mouse buttons have the following default effects:
 
@@ -286,6 +292,10 @@ Modal commands do not take any arguments, but instead change the operation mode 
 	quit                     (default 'q')
 
 Quit lf and return to the shell.
+
+	keys
+
+List active key bindings in the pager.
 
 	up                       (default 'k' and '<up>')
 	half-up                  (default '<c-u>')
@@ -606,6 +616,19 @@ This file is called if previewing is enabled, the previewer is set, and the prev
 Five arguments are passed to the file, (1) current file name, (2) width, (3) height, (4) horizontal position, and (5) vertical position of preview pane respectively.
 Preview clearing is disabled when the value of this option is left empty.
 
+	cursorfmt         string    (default "\033[7m")
+	cursorpreviewfmt  string    (default "\033[4m")
+
+Format strings for highlighting the cursor.
+`cursorpreviewfmt` applies in panes that preview directories, and `cursorfmt` applies in all other panes.
+
+The default is to make the normal cursor inverted and the preview cursor underlined.
+
+Some other possibilities to consider for the preview cursor: an empty string for no cursor, "\033[7;2m" for dimmed inverted text (visibility varies by terminal), "\033[7;90m" for inverted text with grey (aka "brightblack") background.
+
+If the format string contains the characters `%s`, it is interpreted as a format string for `fmt.Sprintf`. Such a string should end with the terminal reset sequence.
+For example, "\033[4m%s\033[0m" has the same effect as "\033[4m".
+
 	dircache       bool      (default on)
 
 Cache directory contents.
@@ -634,9 +657,12 @@ Show only directories.
 
 Draw boxes around panes with box drawing characters.
 
-	errorfmt       string    (default "\033[7;31;47m%s\033[0m")
+	errorfmt       string    (default "\033[7;31;47m")
 
 Format string of error messages shown in the bottom message line.
+
+If the format string contains the characters `%s`, it is interpreted as a format string for `fmt.Sprintf`. Such a string should end with the terminal reset sequence.
+For example, "\033[4m%s\033[0m" has the same effect as "\033[4m".
 
 	filesep        string    (default "\n")
 
@@ -812,9 +838,12 @@ Currently supported sort types are 'natural', 'name', 'size', 'time', 'ctime', '
 
 Number of space characters to show for horizontal tabulation (U+0009) character.
 
-	tagfmt         string    (default "\033[31m%s\033[0m")
+	tagfmt         string    (default "\033[31m")
 
 Format string of the tags.
+
+If the format string contains the characters `%s`, it is interpreted as a format string for `fmt.Sprintf`. Such a string should end with the terminal reset sequence.
+For example, "\033[4m%s\033[0m" has the same effect as "\033[4m".
 
 	tempmarks      string    (default '')
 
