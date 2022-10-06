@@ -1357,7 +1357,7 @@ func (nav *nav) sync() error {
 	}
 
 	oldmarks := nav.marks
-	err = nav.readMarks()
+	errMarks := nav.readMarks()
 	for _, ch := range gOpts.tempmarks {
 		tmp := string(ch)
 		if v, e := oldmarks[tmp]; e {
@@ -1365,6 +1365,9 @@ func (nav *nav) sync() error {
 		}
 	}
 	err = nav.readTags()
+	if errMarks != nil {
+		return errMarks
+	}
 	return err
 }
 

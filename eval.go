@@ -801,6 +801,13 @@ func insert(app *app, arg string) {
 				app.ui.echoerrf("mark-remove: %s", err)
 			}
 		}
+	case app.ui.cmdPrefix == ":" && len(app.ui.cmdAccLeft) == 0:
+		switch arg {
+		case "!", "$", "%", "&":
+			app.ui.cmdPrefix = arg
+			return
+		}
+		fallthrough
 	default:
 		app.ui.cmdAccLeft = append(app.ui.cmdAccLeft, []rune(arg)...)
 	}
@@ -1474,6 +1481,25 @@ func (e *callExpr) eval(app *app, args []string) {
 		app.ui.echomsg(strings.Join(e.args, " "))
 	case "echoerr":
 		app.ui.echoerr(strings.Join(e.args, " "))
+	case "keys":
+		tempfile, err := os.CreateTemp("", "lf_bindings")
+		if err != nil {
+			app.ui.echoerrf("keys: %s:", err)
+			return
+		}
+		_, err = tempfile.Write(listBinds(gOpts.keys).Bytes())
+		tempfile.Close()
+
+		filename := tempfile.Name()
+		if err == nil {
+			app.runShell(pageFileCommand(filename), e.args, "$")
+		}
+
+		os.Remove(filename)
+		app.ui.loadFile(app.nav, false)
+		if err != nil {
+			app.ui.echoerrf("keys: %s:", err)
+		}
 	case "cd":
 		path := "~"
 		if len(e.args) > 0 {
@@ -1917,7 +1943,14 @@ func (e *callExpr) eval(app *app, args []string) {
 		update(app)
 	case "cmd-delete-back":
 		if len(app.ui.cmdAccLeft) == 0 {
-			normal(app)
+			switch app.ui.cmdPrefix {
+			case "!", "$", "%", "&":
+				app.ui.cmdPrefix = ":"
+			case ">":
+				// Don't mess with the program waiting for input
+			default:
+				normal(app)
+			}
 			return
 		}
 		app.ui.cmdAccLeft = app.ui.cmdAccLeft[:len(app.ui.cmdAccLeft)-1]
