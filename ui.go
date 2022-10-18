@@ -1117,7 +1117,7 @@ func (ui *ui) pollEvent() tcell.Event {
 
 func getNonRuneKeyValue(tev *tcell.EventKey) string {
 	val := gKeyVal[tev.Key()]
-	if tev.Modifiers() == tcell.ModAlt && val[0] == '<' {
+	if tev.Modifiers()&tcell.ModAlt != 0 && val[0] == '<' {
 		val = "<a-" + val[1:]
 	}
 	return val
