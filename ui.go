@@ -1081,8 +1081,12 @@ func (ui *ui) pollEvent() tcell.Event {
 				ch = ' '
 			case reAltKey.MatchString(val):
 				match := reAltKey.FindStringSubmatch(val)[1]
-				ch, _ = utf8.DecodeRuneInString(match)
 				mod = tcell.ModMask(tcell.ModAlt)
+				if key, ok := gValKey[fmt.Sprintf("<%s>", match)]; ok {
+					k = key
+				} else {
+					ch, _ = utf8.DecodeRuneInString(match)
+				}
 			default:
 				if key, ok := gValKey[val]; ok {
 					k = key
