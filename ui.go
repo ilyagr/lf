@@ -1138,6 +1138,14 @@ func (ui *ui) pollEvent() tcell.Event {
 	}
 }
 
+func getNonRuneKeyValue(tev *tcell.EventKey) string {
+	val := gKeyVal[tev.Key()]
+	if tev.Modifiers() == tcell.ModAlt && val[0] == '<' {
+		val = "<a-" + val[1:]
+	}
+	return val
+}
+
 // This function is used to read a normal event on the client side. For keys,
 // digits are interpreted as command counts but this is only done for digits
 // preceding any non-digit characters (e.g. "42y2k" as 42 times "y2k").
@@ -1164,13 +1172,14 @@ func (ui *ui) readNormalEvent(ev tcell.Event, nav *nav) expr {
 				ui.keyAcc = append(ui.keyAcc, tev.Rune())
 			}
 		} else {
-			val := gKeyVal[tev.Key()]
+			val := getNonRuneKeyValue(tev)
 			if val == "<esc>" && string(ui.keyAcc) != "" {
 				ui.keyAcc = nil
 				ui.keyCount = nil
 				ui.menuBuf = nil
 				return draw
 			}
+
 			ui.keyAcc = append(ui.keyAcc, []rune(val)...)
 		}
 
@@ -1343,7 +1352,7 @@ func readCmdEvent(ev tcell.Event) expr {
 				return &callExpr{"cmd-insert", []string{string(tev.Rune())}, 1}
 			}
 		} else {
-			val := gKeyVal[tev.Key()]
+			val := getNonRuneKeyValue(tev)
 			if expr, ok := gOpts.cmdkeys[val]; ok {
 				return expr
 			}
