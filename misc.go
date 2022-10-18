@@ -275,8 +275,7 @@ func naturalLess(s1, s2 string) bool {
 	}
 }
 
-var reAltKey = regexp.MustCompile(`<a-(.)>`)
-
+var reAltKey = regexp.MustCompile(`<a-(.|\w+)>`)
 var reWord = regexp.MustCompile(`(\pL|\pN)+`)
 var reWordBeg = regexp.MustCompile(`([^\pL\pN]|^)(\pL|\pN)`)
 var reWordEnd = regexp.MustCompile(`(\pL|\pN)([^\pL\pN]|$)`)
