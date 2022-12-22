@@ -1178,7 +1178,6 @@ func (ui *ui) readNormalEvent(ev tcell.Event, nav *nav) expr {
 		}
 
 		var button string
-
 		switch tev.Buttons() {
 		case tcell.Button1:
 			button = "<m-1>"
@@ -1207,9 +1206,22 @@ func (ui *ui) readNormalEvent(ev tcell.Event, nav *nav) expr {
 		case tcell.ButtonNone:
 			return nil
 		}
-		if tev.Modifiers() == tcell.ModCtrl {
-			button = "<c-" + button[1:]
+
+		var mod string
+		switch tev.Modifiers() {
+		case tcell.ModCtrl:
+			mod = "c"
+		case tcell.ModAlt:
+			mod = "a"
+		case tcell.ModShift:
+			mod = "s"
+		default:
+			mod = ""
 		}
+		if mod != "" {
+			button = fmt.Sprintf("<%s-%s", mod, button[1:])
+		}
+
 		if expr, ok := gOpts.keys[button]; ok {
 			return expr
 		}
