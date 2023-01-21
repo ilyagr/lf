@@ -118,6 +118,7 @@ The following options can be used to customize the behavior of lf:
     autoquit         bool      (default off)
     cleaner          string    (default '')
     cursorfmt        string    (default "\033[7m")
+    cursorparentfmt  string    (default TODO, update rest of docs TODO)
     cursorpreviewfmt string    (default "\033[4m")
     dircache         bool      (default on)
     dircounts        bool      (default off)
