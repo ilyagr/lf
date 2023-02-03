@@ -36,6 +36,7 @@ The following commands are provided by lf:
 	low                      (default 'L')
 	toggle
 	invert                   (default 'v')
+	invert-below             (default 'V')
 	unselect                 (default 'u')
 	glob-select
 	glob-unselect
@@ -333,6 +334,13 @@ Toggle the selection of the current file or files given as arguments.
 Reverse the selection of all files in the current directory (i.e. 'toggle' all files).
 Selections in other directories are not effected by this command.
 You can define a new command to select all files in the directory by combining 'invert' with 'unselect' (i.e. 'cmd select-all :unselect; invert'), though this will also remove selections in other directories.
+
+	invert-below             (default 'V')
+
+Reverse the selection (i.e. 'toggle') of all files at or after the current file in the current directory.
+To select a contiguous block of files, use this command on the first file you want to select.
+Then, move down to the first file you do *not* want to select (the one after the end of the desired selection) and use this command again.
+This achieves an effect similar to the visual mode in vim.
 
 	unselect                 (default 'u')
 
