@@ -2018,24 +2018,7 @@ func (e *callExpr) eval(app *app, args []string) {
 	case "echoerr":
 		app.ui.echoerr(strings.Join(e.args, " "))
 	case "keys":
-		tempfile, err := os.CreateTemp("", "lf_bindings")
-		if err != nil {
-			app.ui.echoerrf("keys: %s:", err)
-			return
-		}
-		_, err = tempfile.Write(listBinds(gOpts.keys).Bytes())
-		tempfile.Close()
-
-		filename := tempfile.Name()
-		if err == nil {
-			app.runShell(pageFileCommand(filename), e.args, "$")
-		}
-
-		os.Remove(filename)
-		app.ui.loadFile(app, false)
-		if err != nil {
-			app.ui.echoerrf("keys: %s:", err)
-		}
+		app.ui.echoerr("This command is now called :maps")
 	case "cd":
 		path := "~"
 		if len(e.args) > 0 {
