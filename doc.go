@@ -997,7 +997,7 @@ If VISUAL is set in the environment, use its value. Otherwise, use the value of 
 
 	PAGER
 
-If this variable is set in the environment, use the same value. Otherwise, this is set to 'less' on Unix, 'more' in Windows.
+If LF_PAGER is set in the environment, use its value. Otherwise, use the value of the environment variable PAGER. If neither variable is set, this is set to 'less' on Unix, 'more' in Windows.
 
 	SHELL
 
