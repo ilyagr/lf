@@ -1226,7 +1226,15 @@ func (ui *ui) readNormalEvent(ev tcell.Event, nav *nav) expr {
 
 		switch len(binds) {
 		case 0:
-			ui.echoerrf("unknown mapping: %s", string(ui.keyAcc))
+    			msg := fmt.Sprintf("unknown mapping: %s", string(ui.keyAcc))
+    			if ui.keyAcc == "<esc>" || ui.keyAcc == "<c-c>" {
+        			if gKeyVal["q"] == quit {
+            			  msg = "To exit, press the 'q' key."
+        			} else if gKeyVal[":"] == read {
+            			  msg = "To exit, type :quit and press enter."
+        			}
+    			}
+			ui.echoerrf(msg)
 			ui.keyAcc = nil
 			ui.keyCount = nil
 			ui.menuBuf = nil
